@@ -78,7 +78,7 @@ bool isScrambledEx(string &s1, string &s2)
 	}
 
 }
-    // dynamic programming.
+   // dynamic programming.
     // assume i -- the start index on s1, j -- the start index on s2, p -- the size of string.
     // state function f(i, j, k) = true if for any n = 1...k-1, 
     //    f(i, j + n, k - n) == true && f(i + k - n, j, n) == true

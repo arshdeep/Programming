@@ -1,5 +1,6 @@
 /* http://leetcode.com/onlinejudge#question_87
 http://blog.theliuy.com/scramble-string/ */
+
 #include<iostream>
 #include<math.h>
 #include<time.h>

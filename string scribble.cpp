@@ -3,7 +3,7 @@
 #include<time.h>
 using namespace std;
 
-bool isScribble(string &s1, string &s2)
+bool isScrambled(string &s1, string &s2)
 {
 	int len = s1.length();
 	if (len != s2.length()) return false;
@@ -20,14 +20,14 @@ bool isScribble(string &s1, string &s2)
 
 	for(int i = 1; i < len; ++i)
 	{
-		if (isScribble(s1.substr(0,i), s2.substr(0,i)) && isScribble(s1.substr(i, s1.length() - i), s2.substr(i, s2.length()-i))
-			|| isScribble(s1.substr(0,i), s2.substr(s2.length() - i,i)) && isScribble(s1.substr(i,s1.length()-i), s2.substr(0,s2.length()-i)))
+		if (isScrambled(s1.substr(0,i), s2.substr(0,i)) && isScrambled(s1.substr(i, s1.length() - i), s2.substr(i, s2.length()-i))
+			|| isScrambled(s1.substr(0,i), s2.substr(s2.length() - i,i)) && isScrambled(s1.substr(i,s1.length()-i), s2.substr(0,s2.length()-i)))
 			return true;
 	}
 	return false;
 }
 
-bool isScribbleEx(string &s1, string &s2)
+bool isScrambledEx(string &s1, string &s2)
 {
 	if (s1.length() == 0 || s2.length() == 0)
 		return false;
@@ -42,28 +42,28 @@ bool isScribbleEx(string &s1, string &s2)
 	{
 		if (s1.length() > 1)
 		{
-			if (isScribble(s1.substr(0, i + 1), s2.substr(j - i, j))
-					&& isScribble(s1.substr(i + 1, j), s2.substr(0, j - i)))
+			if (isScrambledEx(s1.substr(0, i + 1), s2.substr(j - i, j))
+					&& isScrambledEx(s1.substr(i + 1, j), s2.substr(0, j - i)))
 				return true;
 			
-			if(isScribble(s1.substr(0, j - i), s2.substr(i + 1, j))
-					&& isScribble(s1.substr(j - i, j), s2.substr(0, i + 1)))
+			if(isScrambledEx(s1.substr(0, j - i), s2.substr(i + 1, j))
+					&& isScrambledEx(s1.substr(j - i, j), s2.substr(0, i + 1)))
 				return true;
 
-			if (isScribble(s1.substr(0, i + 1), s2.substr(0, i + 1))
-					&& isScribble(s1.substr(i + 1, j), s2.substr(i + 1, j)))
+			if (isScrambledEx(s1.substr(0, i + 1), s2.substr(0, i + 1))
+					&& isScrambledEx(s1.substr(i + 1, j), s2.substr(i + 1, j)))
 				return true;
 
-			if (isScribble(s1.substr(0, j - i), s2.substr(0, j - i))
-					&& isScribble(s1.substr(j - i, j), s2.substr(j - i, j)))
+			if (isScrambledEx(s1.substr(0, j - i), s2.substr(0, j - i))
+					&& isScrambledEx(s1.substr(j - i, j), s2.substr(j - i, j)))
 				return true;
 
-			if (isScribble(s1.substr(0, (i + j)/2 + 1), s2.substr(0, (i + j)/2 + 1))
-					&& isScribble(s1.substr((i + j)/2 + 1, j), s2.substr((i + j)/2 + 1, j)))
+			if (isScrambledEx(s1.substr(0, (i + j)/2 + 1), s2.substr(0, (i + j)/2 + 1))
+					&& isScrambledEx(s1.substr((i + j)/2 + 1, j), s2.substr((i + j)/2 + 1, j)))
 				return true;
 
-			if (isScribble(s1.substr(0, (i + j)/2 ), s2.substr(0, (i + j)/2))
-					&& isScribble(s1.substr((i + j)/2, j), s2.substr((i + j)/2, j)))
+			if (isScrambledEx(s1.substr(0, (i + j)/2 ), s2.substr(0, (i + j)/2))
+					&& isScrambledEx(s1.substr((i + j)/2, j), s2.substr((i + j)/2, j)))
 				return true;
 			return false;
 		}
@@ -80,7 +80,7 @@ int main()
 
 	__time32_t start, end;
 	_time32(&start);
-	if (isScribbleEx(s1, s2))
+	if (isScrambled(s1, s2))
 	{
 		cout<<"TRUE";
 	}

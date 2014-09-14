@@ -4,6 +4,7 @@ http://blog.theliuy.com/scramble-string/ */
 #include<iostream>
 #include<math.h>
 #include<time.h>
+#include<vector>
 using namespace std;
 
 bool isScrambled(string &s1, string &s2)
@@ -24,7 +25,8 @@ bool isScrambled(string &s1, string &s2)
 	for(int i = 1; i < len; ++i)
 	{
 		if (isScrambled(s1.substr(0,i), s2.substr(0,i)) && isScrambled(s1.substr(i, s1.length() - i), s2.substr(i, s2.length()-i))
-			|| isScrambled(s1.substr(0,i), s2.substr(s2.length() - i,i)) && isScrambled(s1.substr(i,s1.length()-i), s2.substr(0,s2.length()-i)))
+			|| isScrambled(s1.substr(0,i), s2.substr(s2.length() - i,i))
+				&& isScrambled(s1.substr(i,s1.length()-i), s2.substr(0,s2.length()-i)))
 			return true;
 	}
 	return false;
@@ -76,14 +78,45 @@ bool isScrambledEx(string &s1, string &s2)
 	}
 
 }
+    // dynamic programming.
+    // assume i -- the start index on s1, j -- the start index on s2, p -- the size of string.
+    // state function f(i, j, k) = true if for any n = 1...k-1, 
+    //    f(i, j + n, k - n) == true && f(i + k - n, j, n) == true
+    // or f(i, j, n) == true && f(i + n, j + n, k - n) == true;
+bool isScrambleDP(string s1, string s2) {
+	int n = s1.size();
+	vector<vector<vector<int>>> m(n + 1, vector<vector<int>>(n + 1, vector<int>(n + 1, 0)));
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			m[i][j][1] = (s1[i] == s2[j]);
+		}
+	}
+	for (int p = 2; p <= n; p++) {
+		for (int i = 0; i <= n - p; i++) {
+			for (int j = 0; j <= n - p; j++) {
+				for (int k = 1; k <= p - 1; k++) {
+					if (m[i][j][k] && m[i + k][j + k][p - k]) {
+						m[i][j][p] = 1;
+						break;
+					} else if (m[i][j+k][p-k] && m[i + p - k][j][k]) {
+						m[i][j][p] = 1;
+						break;
+					}
+				}
+			}
+		}
+	}
+	return m[0][0][s1.size()];
+}
+
 int main()
 {
-	string s1 = "abbbcbaaccacaacc";
-	string s2 = "acaaaccabcabcbcb";//"badc"; "dbac"
+	string s1 = "abcd";//"abbbcbaaccacaacc";
+	string s2 = "badc";//"acaaaccabcabcbcb";//"badc"; "dbac"
 
 	__time32_t start, end;
 	_time32(&start);
-	if (isScrambled(s1, s2))
+	if (isScrambleDP(s1, s2))
 	{
 		cout<<"TRUE";
 	}

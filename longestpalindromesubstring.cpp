@@ -4,29 +4,6 @@
 #include <string>
 
 using namespace std;
-void print(vector<vector<int>> &dp, int i, int j, string &str)
-{
-	if (i > j) return;
-
-	if (i == j) {
-		cout<<str[j];
-		return;
-	}
-
-	if (str[i] == str[j])
-	{
-		cout<<str[j];
-		print(dp, i + 1, j - 1, str);
-		cout<<str[j];
-	}
-	else {
-		if (dp[i+1][j] > dp[i][j-1])
-			print(dp, i+1,j,str);
-		else
-			print(dp, i, j-1,str);
-	}
-
-}
 
 int longestPalSubstr(string &str)
 {

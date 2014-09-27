@@ -1,67 +1,63 @@
-#include<iostream>
-using namespace std;
+#include <limits.h>
+#include <iostream>
+#include <vector>
+#include <string>
 
-void print(int dp[][15], int s, int e, char *seq)
+using namespace std;
+void print(vector<vector<int>> &dp, int i, int j, string &str)
 {
-	if (s >= e)
-	{
-		if(s == e)
-			cout<<seq[e];
+	if (i > j) return;
+
+	if (i == j) {
+		cout<<str[j];
 		return;
 	}
 
-	if (seq[s] == seq[e])
+	if (str[i] == str[j])
 	{
-		cout<<seq[s];
-		print(dp, s +1, e - 1, seq);
-		cout<<seq[e];
+		cout<<str[j];
+		print(dp, i + 1, j - 1, str);
+		cout<<str[j];
 	}
-	else
-	{
-		if (dp[s + 1][e] > dp[s][e-1])
-		{
-			print(dp, s+1, e, seq);
-		}
+	else {
+		if (dp[i+1][j] > dp[i][j-1])
+			print(dp, i+1,j,str);
 		else
-		{
-			print(dp, s, e-1, seq);
-		}
+			print(dp, i, j-1,str);
 	}
+
 }
 
-int lps(char *seq, int n)
+int lps(string &str)
 {
-	int dp[15][15];
+	int n = str.length();
+	vector<vector<int>> dp(n, vector<int>(n));
 
-	memset(dp, 0, sizeof(dp));
-	for(int i = 0; i < n; ++i)
+	for (int i = 0; i < n; ++i)
 	{
 		dp[i][i] = 1;
 	}
 
-	for(int gap = 1; gap < n; ++gap)
+	for (int gap = 1; gap < n; ++gap)
 	{
-		for(int i = 0, j = gap; j < n; ++i, ++j)
+		for (int i = 0, j = gap; j < n; ++j, ++i)
 		{
-			if (seq[i] == seq[j])
+			if (str[i] == str[j])
 			{
-				dp[i][j] = dp[i+1][j-1] + 2;
+				dp[i][j] = dp[i + 1] [j - 1] + 2;
 			}
-			else
-			{
-				dp[i][j] = max(dp[i+1][j], dp[i][j-1]);
+			else {
+				dp[i][j] = std::max(dp[i+1][j], dp[i][j-1]);
 			}
 		}
 	}
-	print(dp, 0, n-1, seq);
+	print(dp, 0, n-1, str);
 	return dp[0][n-1];
 }
-
 int main()
 {
-    char seq[] = "GEEKS FOR GEEKS";
-    int n = strlen(seq);
-    printf ("\nThe lnegth of the LPS is %d", lps(seq, n));
+    string seq = "GEEKS FOR GEEKS";
+    printf ("\nThe lnegth of the LPS is %d", lps(seq));
     getchar();
     return 0;
 }

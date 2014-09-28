@@ -42,7 +42,7 @@ int countwalks(int g[][V], int u, int v, int k)
 				else if (edges > 1) {
 					for (int t = 0; t < V; ++t)
 					{
-						if (g[i][t] != INF && t != i && t!= j)
+						if (g[i][t] != INF && t != i && dp[t][j][edges-1] != INF)
 							dp[i][j][edges] = std::min(dp[i][j][edges], g[i][t] + dp[t][j][edges-1]);
 					}
 				}

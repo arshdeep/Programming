@@ -37,7 +37,7 @@ int maxSum(int in[][4], int n)
 
 int main()
 {
-	int in[4][4] = {{3,0,0,0}, {7,4,0,0}, {2,4,6,0}, {8,5,9,3}};
+	int in[4][4] = {{3,0,0,0},{10,7,0,0},{12,14,13,0},{20,19,23,16}};
     printf ("\n max sum in triangle %d", maxSum(in, 4));
     getchar();
     return 0;

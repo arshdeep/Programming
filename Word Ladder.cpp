@@ -3,9 +3,11 @@
 #include <vector>
 #include <string>
 #include <queue>
+#include <map>
 #include <unordered_set>
 using namespace std;
 
+/*Approach 1 : DFS with queue*/
 int ladderLength(string start, string end, unordered_set<string> &dict) {
 	if (dict.size() == 0) return 0;
 
@@ -41,6 +43,89 @@ int ladderLength(string start, string end, unordered_set<string> &dict) {
 	}
 	return 0;
 }
+
+vector<string> getPossibleStrings(string str, unordered_set<string> &dict, map<string, int> stringMap)
+{
+	int len = str.length();
+	vector<string> vect;
+	for (int i = 0; i < len; ++i)
+	{
+		string temp = str;
+		for (char j = 'a'; j <= 'z'; ++j)
+		{
+			string temp = str;
+			temp[i] = j;
+
+			if (temp.compare(str) != 0 && dict.find(temp) != dict.end() && stringMap.find(temp) == stringMap.end())
+			{
+				vect.push_back(temp);
+			}
+		}
+	}
+	return vect;
+}
+
+int ladderLength2(string start, string end, unordered_set<string> &dict) {
+	if (dict.size() == 0) return 0;
+	if (start.compare(end) == 0) return 1;
+	struct node
+	{
+		string value;
+		int level;
+		node(string str, int l) {value = str; level = l;}
+	};
+	queue<node> startQueue;
+	queue<node> endQueue;
+	map<string, int> startMap;
+	startMap[start] = 1;
+
+	map<string, int> endMap;
+	endMap[end] = 1;
+
+	int sLevel = 1, rLevel = 1;
+	node temp = node(start, 1);
+	startQueue.push(temp);
+	temp = node(end, 1);
+	endQueue.push(temp);
+
+	while (!startQueue.empty() && !endQueue.empty())
+	{
+		if (startQueue.size() < endQueue.size())
+		{
+			node temp = startQueue.front();
+			vector<string> vect = getPossibleStrings(temp.value, dict, startMap);
+			for (auto id = vect.begin(); id != vect.end(); ++id)
+			{
+				startMap[*id] = sLevel + 1;
+				temp = node(*id, sLevel + 1);
+				startQueue.push(temp);
+				if (endMap.find(*id) != endMap.end()) {
+					return sLevel + endMap[*id];
+				}
+			}
+			startQueue.pop();
+			sLevel++;
+		}
+		else
+		{
+			node temp = endQueue.front();
+			vector<string> vect = getPossibleStrings(temp.value, dict, endMap);
+			for (auto id = vect.begin(); id != vect.end(); ++id)
+			{
+				endMap[*id] = rLevel + 1;
+				temp = node(*id, rLevel + 1);
+				endQueue.push(temp);
+				if (startMap.find(*id) != startMap.end() && startMap[*id]) {
+					return startMap[*id] + rLevel;
+				}
+			}
+			endQueue.pop();
+
+			rLevel++;
+		}
+	}
+	return 0;
+}
 int main(int argc, char *argv[])
 {
 	unordered_set<string> dict;
@@ -49,12 +134,35 @@ int main(int argc, char *argv[])
 	dict.insert("dog");
 	dict.insert("lot");
 	dict.insert("log");
-	
-	/*dict.insert("hot");
+	cout<<ladderLength2("hit", "cog", dict)<<endl;
+	dict.empty();
+	dict.insert("hot");
 	dict.insert("dog");
-	dict.insert("dot");*/
-	cout<<ladderLength("hit", "cog", dict);
-	//cout<<ladderLength("hot", "dog", dict);
+	dict.insert("dot");
+	//"kiss", "tusk", ["miss","dusk","kiss","musk","tusk","diss","disk","sang","ties","muss"]
+	
+	cout<<ladderLength2("hot", "dog", dict)<<endl;
+	dict.empty();
+	dict.insert("misss");
+	dict.insert("dusk");
+	dict.insert("kiss");
+	dict.insert("musk");
+	dict.insert("tusk");
+	dict.insert("diss");
+	dict.insert("disk");
+	dict.insert("sang");
+	dict.insert("ties");
+	dict.insert("muss");
+	cout<<ladderLength2("kiss", "tusk", dict)<<endl;
+	cout<<ladderLength("kiss", "tusk", dict)<<endl;
+	dict.empty();
+
+	dict.insert("a");
+	dict.insert("b");
+	dict.insert("c");
+	cout<<ladderLength2("a", "c", dict);
+	dict.empty();
+
 	getchar(); 
    return 0;
 }

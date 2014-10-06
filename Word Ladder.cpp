@@ -92,45 +92,45 @@ int ladderLength2(string start, string end, unordered_set<string> &dict) {
 	{
 		if (startQueue.size() < endQueue.size())
 		{
-            while (!startQueue.empty() && sLevel == startQueue.front().level) {
-                node temp = startQueue.front();
-                vector<string> vect = getPossibleStrings(temp.value, dict);
-                for (auto id = vect.begin(); id != vect.end(); ++id)
-                {
-                    if (!startMap[*id])
-                    {
-                        startMap[*id] = true;
-                        if (endMap.find(*id) != endMap.end()) {
-                            return startQueue.front().level + endQueue.back().level;
-                        }
-                        temp = node(*id, sLevel + 1);
-                        startQueue.push(temp);
-                    }
-                }
-                startQueue.pop();
-            }
-            sLevel++;
+	            while (!startQueue.empty() && sLevel == startQueue.front().level) {
+	                node temp = startQueue.front();
+	                vector<string> vect = getPossibleStrings(temp.value, dict);
+	                for (auto id = vect.begin(); id != vect.end(); ++id)
+	                {
+	                    if (!startMap[*id])
+	                    {
+	                        startMap[*id] = true;
+	                        if (endMap.find(*id) != endMap.end()) {
+	                            return startQueue.front().level + endQueue.back().level;
+	                        }
+	                        temp = node(*id, sLevel + 1);
+	                        startQueue.push(temp);
+	                    }
+	                }
+	                startQueue.pop();
+	            }
+	            sLevel++;
 		}
 		else
 		{
-            while (!endQueue.empty() && rLevel == endQueue.front().level) {
-                node temp = endQueue.front();
-                vector<string> vect = getPossibleStrings(temp.value, dict);
-                for (auto id = vect.begin(); id != vect.end(); ++id)
-                {
-                    if (!endMap[*id])
-                    {
-                        endMap[*id] = true;
-                        if (startMap.find(*id) != startMap.end()) {
-                            return startQueue.back().level + endQueue.front().level;
-                        }
-                        temp = node(*id, rLevel + 1);
-                        endQueue.push(temp);
-                    }
-                }
-                endQueue.pop();
-            }
-            rLevel++;
+	            while (!endQueue.empty() && rLevel == endQueue.front().level) {
+	                node temp = endQueue.front();
+	                vector<string> vect = getPossibleStrings(temp.value, dict);
+	                for (auto id = vect.begin(); id != vect.end(); ++id)
+	                {
+	                    if (!endMap[*id])
+	                    {
+	                        endMap[*id] = true;
+	                        if (startMap.find(*id) != startMap.end()) {
+	                            return startQueue.back().level + endQueue.front().level;
+	                        }
+	                        temp = node(*id, rLevel + 1);
+	                        endQueue.push(temp);
+	                    }
+	                }
+	                endQueue.pop();
+	            }
+	            rLevel++;
 		}
 	}
 	return 0;

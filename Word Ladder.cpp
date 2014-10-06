@@ -10,13 +10,13 @@ using namespace std;
 /*Approach 1 : DFS with queue*/
 int ladderLength(string start, string end, unordered_set<string> &dict) {
 	if (dict.size() == 0) return 0;
-
+    
 	queue<string> frontQueue;
 	queue<int> backQueue;
-
+    
 	frontQueue.push(start);
 	backQueue.push(1);
-
+    
 	while(!frontQueue.empty())
 	{
 		string str = frontQueue.front();
@@ -31,7 +31,7 @@ int ladderLength(string start, string end, unordered_set<string> &dict) {
 				string temp = str;
 				temp[i] = j;
 				if (temp.compare(end) == 0) return len+1;
-
+                
 				if (dict.find(temp) != dict.end())
 				{
 					backQueue.push(len+1);
@@ -44,7 +44,7 @@ int ladderLength(string start, string end, unordered_set<string> &dict) {
 	return 0;
 }
 
-vector<string> getPossibleStrings(string str, unordered_set<string> &dict, map<string, int> stringMap)
+vector<string> getPossibleStrings(string str, unordered_set<string> &dict)
 {
 	int len = str.length();
 	vector<string> vect;
@@ -55,8 +55,8 @@ vector<string> getPossibleStrings(string str, unordered_set<string> &dict, map<s
 		{
 			string temp = str;
 			temp[i] = j;
-
-			if (temp.compare(str) != 0 && dict.find(temp) != dict.end() && stringMap.find(temp) == stringMap.end())
+            
+			if (temp.compare(str) != 0 && dict.find(temp) != dict.end())
 			{
 				vect.push_back(temp);
 			}
@@ -76,52 +76,61 @@ int ladderLength2(string start, string end, unordered_set<string> &dict) {
 	};
 	queue<node> startQueue;
 	queue<node> endQueue;
-	map<string, int> startMap;
-	startMap[start] = 1;
-
+	map<string, bool> startMap;
+	startMap[start] = true;
+    
 	map<string, int> endMap;
-	endMap[end] = 1;
-
+	endMap[end] = true;
+    
 	int sLevel = 1, rLevel = 1;
 	node temp = node(start, 1);
 	startQueue.push(temp);
 	temp = node(end, 1);
 	endQueue.push(temp);
-
+    
 	while (!startQueue.empty() && !endQueue.empty())
 	{
 		if (startQueue.size() < endQueue.size())
 		{
-			node temp = startQueue.front();
-			vector<string> vect = getPossibleStrings(temp.value, dict, startMap);
-			for (auto id = vect.begin(); id != vect.end(); ++id)
-			{
-				startMap[*id] = sLevel + 1;
-				temp = node(*id, sLevel + 1);
-				startQueue.push(temp);
-				if (endMap.find(*id) != endMap.end()) {
-					return sLevel + endMap[*id];
-				}
-			}
-			startQueue.pop();
-			sLevel++;
+            while (!startQueue.empty() && sLevel == startQueue.front().level) {
+                node temp = startQueue.front();
+                vector<string> vect = getPossibleStrings(temp.value, dict);
+                for (auto id = vect.begin(); id != vect.end(); ++id)
+                {
+                    if (!startMap[*id])
+                    {
+                        startMap[*id] = true;
+                        if (endMap.find(*id) != endMap.end()) {
+                            return startQueue.front().level + endQueue.back().level;
+                        }
+                        temp = node(*id, sLevel + 1);
+                        startQueue.push(temp);
+                    }
+                }
+                startQueue.pop();
+            }
+            sLevel++;
 		}
 		else
 		{
-			node temp = endQueue.front();
-			vector<string> vect = getPossibleStrings(temp.value, dict, endMap);
-			for (auto id = vect.begin(); id != vect.end(); ++id)
-			{
-				endMap[*id] = rLevel + 1;
-				temp = node(*id, rLevel + 1);
-				endQueue.push(temp);
-				if (startMap.find(*id) != startMap.end() && startMap[*id]) {
-					return startMap[*id] + rLevel;
-				}
-			}
-			endQueue.pop();
-
-			rLevel++;
+            while (!endQueue.empty() && rLevel == endQueue.front().level) {
+                node temp = endQueue.front();
+                vector<string> vect = getPossibleStrings(temp.value, dict);
+                for (auto id = vect.begin(); id != vect.end(); ++id)
+                {
+                    if (!endMap[*id])
+                    {
+                        endMap[*id] = true;
+                        if (startMap.find(*id) != startMap.end()) {
+                            return startQueue.back().level + endQueue.front().level;
+                        }
+                        temp = node(*id, rLevel + 1);
+                        endQueue.push(temp);
+                    }
+                }
+                endQueue.pop();
+            }
+            rLevel++;
 		}
 	}
 	return 0;
@@ -156,13 +165,13 @@ int main(int argc, char *argv[])
 	cout<<ladderLength2("kiss", "tusk", dict)<<endl;
 	cout<<ladderLength("kiss", "tusk", dict)<<endl;
 	dict.empty();
-
-	dict.insert("a");
+    
+	/*dict.insert("a");
 	dict.insert("b");
 	dict.insert("c");
 	cout<<ladderLength2("a", "c", dict);
 	dict.empty();
-
+    */
 	getchar(); 
-   return 0;
+    return 0;
 }

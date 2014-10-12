@@ -2,6 +2,8 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <algorithm>
+#include <numeric>
 using namespace std;
 
 int sum(int *vect, int s, int e)
@@ -68,16 +70,48 @@ int partitionDP(int *arr, int n, int k)
 	return dp[n][k];
 }
 
+// geedy approach O(n*SUM) ref: tocoder
+int getMostWork( int *folders, int n, int workers ) {
+   int lo = *max_element(folders, folders+n);
+   int hi = accumulate(folders, folders+n, 0 );
+
+   while ( lo < hi ) {
+      int x = lo + (hi-lo) / 2;
+
+      int required = 1, current_load = 0;
+      for ( int i=0; i<n; ++i ) {
+         if ( current_load + folders[i] <= x ) {
+            // the current worker can handle it
+            current_load += folders[i];
+         }
+         else {
+            // assign next worker
+            ++required;
+            current_load = folders[i];
+		 }
+      }
+
+      if ( required <= workers )
+         hi = x;
+      else
+         lo = x+1;
+   }
+
+   return lo;
+}
+
 int main(int argc, char *argv[])
 {
 	int a[] = {10, 20, 30, 40, 50, 60, 70, 80, 90};
 	int size = sizeof(a)/sizeof(a[0]);
-	cout<<partitionDP(a, size, 3)<<endl;
+	cout<<getMostWork(a, size, 3)<<endl;
 
-	cout<<partitionDP(a, size, 5)<<endl;
+	cout<<getMostWork(a, size, 5)<<endl;
+
 	int a2[] = { 950, 650, 250, 250, 350, 100, 650, 150, 150, 700 };
 	size = sizeof(a2)/sizeof(a2[0]);
 	cout<<partitionDP(a2, size, 6)<<endl;
+
 	int a3[] = { 568, 712, 412, 231, 241, 393, 865, 287, 128, 457, 238, 98, 980, 23, 782};
 	size = sizeof(a3)/sizeof(a3[0]);
 	cout<<partitionDP(a3, size, 4);

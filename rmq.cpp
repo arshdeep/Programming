@@ -29,7 +29,7 @@ int query_segment_tree(int *tree, int node, int sb, int se, int *a, int s, int e
     if (sb == s && se == e)
         return tree[node];
          
-    int mid = (sb+se)/2;
+    int mid = sb + (se-sb)/2;
     if (s > mid)
         return query_segment_tree(tree, 2*node+1, mid+1, se, a, s, e);
          

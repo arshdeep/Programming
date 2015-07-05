@@ -24,38 +24,15 @@ using namespace std;
  */
 int maxproduct(int *arr, int n)
 {
-    int maxproduct = -1;
+    int maxproduct = arr[0];
     int max = arr[0];
-    int prev = arr[0];
-    int start = 0;
-    int end = 0;
+    int min = arr[0];
     
     for (int i = 1; i< n; ++i)
     {
-        if (arr[i] == 0)
-        {
-            start = i + 1;
-            end = i + 1;
-            max = 0;
-            prev = 0;
-        }
-        else{
-            prev = prev * arr[i];
-            if (prev == 0) prev = arr[i];
-            if (arr[i] > max)
-            {
-                max = arr[i];
-            
-            }
-            else if (max < prev)
-            {
-                max = prev;
-                end = i;
-            }
-            
-        }
-        
-        
+        int temp = max;
+        max = std::max( std::max( arr[i] * max, arr[i] ), arr[i] * min );
+        min = std::min( std::min( arr[i] * temp, arr[i] ), arr[i] * min );
         maxproduct = std::max(max, maxproduct);
     }
     return maxproduct;
@@ -64,7 +41,7 @@ int maxproduct(int *arr, int n)
 // Driver program to test abive function
 int main()
 {
-    int a[] = {-3, -40, 0, -2};
+    int a[] = {-2, -3, 0, -2, -40};
     
     cout<<maxproduct(a, sizeof(a)/sizeof(a[0]))<<endl;
     
